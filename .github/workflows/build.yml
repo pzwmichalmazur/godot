@@ -1,35 +1,63 @@
 name: "Build iOS app"
 
-# on: [push]
 on: [workflow_dispatch]
 
 jobs:
   build_ios:
     runs-on: macos-latest
+
     steps:
-      - name: checkout repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: build archive and ipaify
+      # ---------------------------------------------------
+      # 1. Download your exported Xcode project (Dropbox)
+      # ---------------------------------------------------
+      - name: Download Godot iOS project
         run: |
           wget -O archive.zip "https://www.dropbox.com/scl/fi/rvrqyn8abfi41dudl5uaw/226f30ae-fbae-11f0-9322-9c6b007f3b79.zip?rlkey=x6xvlisxs8jpren8p3rkoocdl&dl=1"
           unzip -oq archive.zip -d .
 
-          xcodebuild archive -project iosv14.xcodeproj -scheme 'iosv14' -archivePath iosv14.xcarchive -configuration Release CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
+      # ---------------------------------------------------
+      # 2. Download Godot 4.5.1 iOS export templates
+      # ---------------------------------------------------
+      - name: Download Godot 4.5.1 iOS frameworks
+        run: |
+          curl -L -o export_templates.tpz \
+            https://github.com/godotengine/godot/releases/download/4.5.1-stable/Godot_v4.5.1-stable_export_templates.tpz
+
+          unzip -oq export_templates.tpz -d godot_templates
+
+          # copy required xcframeworks next to xcodeproj
+          cp -R godot_templates/iosv14.xcframework .
+          cp -R godot_templates/MoltenVK.xcframework .
+
+      # ---------------------------------------------------
+      # 3. Build archive and create IPA
+      # ---------------------------------------------------
+      - name: Build archive and ipa
+        run: |
+          xcodebuild archive \
+            -project iosv14.xcodeproj \
+            -scheme iosv14 \
+            -archivePath iosv14.xcarchive \
+            -configuration Release \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO
 
           mkdir Payload
           mv iosv14.xcarchive/Products/Applications/iosv14.app Payload/iosv14.app
 
-          zip -r "iosv14.ipa" "Payload"
+          zip -r iosv14.ipa Payload
 
           mv iosv14.ipa ${{ runner.temp }}/iosv14.ipa
 
-
+      # ---------------------------------------------------
+      # 4. Upload IPA
+      # ---------------------------------------------------
       - name: Upload application
         uses: actions/upload-artifact@v4
         with:
           name: iosv14
           path: ${{ runner.temp }}/iosv14.ipa
-          # you can also archive the entire directory
-          # path: ${{ runner.temp }}/build
           retention-days: 3
