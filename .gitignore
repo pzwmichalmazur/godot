@@ -1,0 +1,5 @@
+iosv14.xcframework/
+*.ipa
+*.zip
+.DS_Store
+MoltenVK.xcframework/
