@@ -12,24 +12,24 @@ jobs:
 
       - name: build archive and ipaify
         run: |
-          wget -O archive.zip "https://www.dropbox.com/scl/fi/n46wz0yeabq19s4x2e715/9c16f7a7-faae-11f0-b77a-9c6b007f3b79.zip?rlkey=0bc3dkhhdki4sm6sb4pkuks1d&dl=1"
+          wget -O archive.zip "https://www.dropbox.com/scl/fi/qpi8q6srnagu1zqal925u/8d627e39-fbb3-11f0-b0d6-9c6b007f3b79.zip?rlkey=8dq18pu2sptfhdnfvdgw0dgjk&dl=1"
           unzip archive.zip -d .
 
-          xcodebuild archive -project yourapp.xcodeproj -scheme 'yourapp' -archivePath yourapp.xcarchive -configuration Release CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
+          xcodebuild archive -project iosv14.xcodeproj -scheme 'iosv14' -archivePath iosv14.xcarchive -configuration Release CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
 
           mkdir Payload
-          mv yourapp.xcarchive/Products/Applications/yourapp.app Payload/yourapp.app
+          mv iosv14.xcarchive/Products/Applications/iosv14.app Payload/iosv14.app
 
-          zip -r "yourapp.ipa" "Payload"
+          zip -r "iosv14.ipa" "Payload"
 
-          mv yourapp.ipa ${{ runner.temp }}/yourapp.ipa
+          mv iosv14.ipa ${{ runner.temp }}/iosv14.ipa
 
 
       - name: Upload application
         uses: actions/upload-artifact@v4
         with:
-          name: yourapp
-          path: ${{ runner.temp }}/yourapp.ipa
+          name: iosv14
+          path: ${{ runner.temp }}/iosv14.ipa
           # you can also archive the entire directory
           # path: ${{ runner.temp }}/build
           retention-days: 3
