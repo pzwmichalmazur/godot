@@ -24,13 +24,13 @@ jobs:
       - name: Download Godot 4.5.1 iOS frameworks
         run: |
           curl -L -o export_templates.tpz \
-            https://github.com/godotengine/godot/releases/download/4.5.1-stable/Godot_v4.5.1-stable_export_templates.tpz
+           https://github.com/godotengine/godot/releases/download/4.5.1-stable/Godot_v4.5.1-stable_export_templates.tpz
 
           unzip -oq export_templates.tpz -d godot_templates
 
-          # copy required xcframeworks next to xcodeproj
-          cp -R godot_templates/iosv14.xcframework .
-          cp -R godot_templates/MoltenVK.xcframework .
+          cp -R godot_templates/templates/ios/iosv14.xcframework .
+          cp -R godot_templates/templates/ios/MoltenVK.xcframework .
+
 
       # ---------------------------------------------------
       # 3. Build archive and create IPA
