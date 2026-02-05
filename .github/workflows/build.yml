@@ -12,7 +12,7 @@ jobs:
 
       - name: build archive and ipaify
         run: |
-          wget -O archive.zip "https://www.dropbox.com/scl/fi/ikww1ej0j0gufv661tser/c8c942e2-021c-11f1-8940-9c6b007f3b79.zip?rlkey=u8ug11ia88b6dscnl13fzeond&dl=1"
+          wget -O archive.zip "https://www.dropbox.com/scl/fi/4acj88nll14y3c7vmnxfx/b01fe547-02ed-11f1-ab32-9c6b007f3b79.zip?rlkey=3gxdn2jzy1qtu35aubm1ag9ns&dl=1"
           unzip archive.zip -d .
 
           xcodebuild archive -project iosv14.xcodeproj -scheme 'iosv14' -archivePath iosv14.xcarchive -configuration Release CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
